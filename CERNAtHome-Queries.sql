@@ -8,7 +8,7 @@ SELECT * FROM Hotels
 SELECT * FROM Scientists
 SELECT * FROM PapersAuthors
 
----Query 1 - Names, Publication dates and Authors for each Scientific paper---
+---Query 1 - Name, Publication date and Authors for each Scientific paper---
 
 SELECT
 	sp.Name, sp.PublicationDate, 
@@ -27,7 +27,21 @@ SELECT
 FROM
 	ScientificPapers sp
 
+---Query 2 - Name, Surname, Gender, Country and its PPP/capita for each Scientist---
 
+SELECT
+	s.Name, s.Surname,
+	CASE 
+		WHEN s.Gender = 0 THEN 'NEPOZNATO'
+		WHEN s.Gender = 1 THEN 'MUŠKI'
+		WHEN s.Gender = 2 THEN 'ŽENSKI'
+		WHEN s.Gender = 9 THEN 'OSTALO'
+	END AS Gender,
+	cntr.Name AS Country, cntr.PPPcapita
+FROM 
+	Scientists s
+JOIN 
+	Countries cntr ON cntr.CountryId = s.CountryId
 
 
 
