@@ -75,20 +75,20 @@ JOIN
 WHERE  
 	DATE_PART('year', sp.PublicationDate) BETWEEN 2015 AND 2017
 	
----Query 5 - Number od papers per country and most popular paper by a scientist from the same country---
+---Query 5 - Number od papers and most popular paper by a scientist per country---
 
 SELECT 
-	c.Name AS Country, COUNT(*) AS Number_Of_Papers, 
+	c.Name AS Country, s.Surname AS Scientist, COUNT(*) AS Number_Of_Papers, 
 	(SELECT
 		sp.Name
 	FROM 
 		ScientificPapers sp
 	JOIN 
 	 	PapersAuthors pa ON pa.PaperId = sp.PaperId
-	JOIN 
-		Scientists s ON s.ScientistId = pa.AuthorId
 	WHERE 
-		s.CountryId = c.CountryId
+	 	pa.AuthorId = s.ScientistId AND c.CountryId = s.CountryId
+	GROUP BY
+	 	sp.Name, sp.CitationsNumber
 	ORDER BY
 		sp.CitationsNumber DESC
 	LIMIT 1)
@@ -102,7 +102,9 @@ JOIN
 JOIN 
 	Countries c ON c.CountryId = s.CountryId
 GROUP BY
-	c.CountryId
+	c.CountryId, s.ScientistId
+ORDER BY
+	c.Name, s.Surname
 
 ---Query 6 - First published paper per country---
 
@@ -163,7 +165,7 @@ SELECT a.Name AS Accelerator,
 FROM 
 	Accelerators a
 	
-
+---Query 9 - 
 
 
 
