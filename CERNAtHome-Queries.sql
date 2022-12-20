@@ -75,14 +75,22 @@ JOIN
 WHERE  
 	DATE_PART('year', sp.PublicationDate) BETWEEN 2015 AND 2017
 
+---Query 7 - Order Cities by the number of Scientists currently staying there---
 
-
-
-
-
-
-
-
+SELECT
+	c.Name AS City, 
+	(SELECT 
+	 	COUNT(*) AS Number_Of_Scientists 
+	 FROM 
+	 	Scientists s 
+	 JOIN 
+	 	Hotels h ON h.HotelId = s.HotelId
+	 WHERE 
+	 	h.HotelId = s.HotelId and h.CityId = c.CityId)
+FROM 
+	Cities c
+ORDER BY
+	Number_Of_Scientists
 
 
 
