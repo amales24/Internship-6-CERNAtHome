@@ -80,17 +80,49 @@ WHERE
 SELECT
 	c.Name AS City, 
 	(SELECT 
-	 	COUNT(*) AS Number_Of_Scientists 
+	 	COUNT(*)  
 	 FROM 
 	 	Scientists s 
 	 JOIN 
 	 	Hotels h ON h.HotelId = s.HotelId
 	 WHERE 
-	 	h.HotelId = s.HotelId and h.CityId = c.CityId)
+	 	h.HotelId = s.HotelId and h.CityId = c.CityId) 
+	AS Number_Of_Scientists
 FROM 
 	Cities c
 ORDER BY
-	Number_Of_Scientists
+	Number_Of_Scientists DESC
+
+---Query 8 - Average number of citations per Accelerator---
+
+SELECT a.Name AS Accelerator, 
+	COALESCE
+	((SELECT 
+	 	 ROUND(AVG(sp.CitationsNumber),2)
+	  FROM 
+	 	 ScientificPapers sp
+	  JOIN
+	 	 Projects p ON p.ProjectId = sp.ProjectId
+	  JOIN
+	 	 ProjectsAccelerators pa ON pa.ProjectId = p.ProjectId
+	  WHERE 
+	 	 sp.ProjectId = pa.ProjectId AND a.AcceleratorId = pa.AcceleratorId), 0)
+	 AS Average_Citations_Number 
+FROM 
+	Accelerators a
+	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
