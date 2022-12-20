@@ -103,15 +103,16 @@ FROM Countries c
 ---Query 7 - Order Cities by the number of Scientists currently staying there---
 
 SELECT
-	c.Name AS City, 
-	(SELECT 
-	 	COUNT(*)  
-	 FROM 
-	 	Scientists s 
-	 JOIN 
-	 	Hotels h ON h.HotelId = s.HotelId
-	 WHERE 
-	 	h.HotelId = s.HotelId and h.CityId = c.CityId) 
+	c.Name AS City,
+	COALESCE(
+		(SELECT 
+			COUNT(*)  
+		 FROM 
+			Scientists s 
+		 JOIN 
+			Hotels h ON h.HotelId = s.HotelId
+		 WHERE 
+			h.HotelId = s.HotelId and h.CityId = c.CityId), 0)
 	AS Number_Of_Scientists
 FROM 
 	Cities c
