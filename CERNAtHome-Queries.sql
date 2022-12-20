@@ -36,14 +36,33 @@ SELECT
 		WHEN s.Gender = 1 THEN 'MUŠKI'
 		WHEN s.Gender = 2 THEN 'ŽENSKI'
 		WHEN s.Gender = 9 THEN 'OSTALO'
-	END AS Gender,
+	END 
+	AS Gender,
 	cntr.Name AS Country, cntr.PPPcapita
 FROM 
 	Scientists s
 JOIN 
 	Countries cntr ON cntr.CountryId = s.CountryId
 
+---Query 3 - All Project - Accelerator combinations---
 
+SELECT 
+	p.Name AS Project_Name,
+	CASE 
+		WHEN 
+			(SELECT COUNT(*) FROM ProjectsAccelerators pa WHERE pa.ProjectId = p.ProjectId) > 0
+		THEN
+			a.Name
+		ELSE
+			'NEMA GA'
+	END
+	AS Accelerator_Name
+FROM 
+	Projects p
+LEFT JOIN 
+	ProjectsAccelerators pa ON pa.Projectid = p.Projectid
+LEFT JOIN 
+	Accelerators a ON pa.AcceleratorId = a.AcceleratorId
 
 
 
