@@ -74,6 +74,31 @@ JOIN
 	ScientificPapers sp ON sp.ProjectId = p.ProjectId
 WHERE  
 	DATE_PART('year', sp.PublicationDate) BETWEEN 2015 AND 2017
+	
+---Query 5 - Number od papers per country and most popular paper by a scientist from the same country---
+
+
+---Query 6 - First published paper per country---
+
+SELECT 
+	c.Name as Country,
+	COALESCE(
+		(SELECT 
+			sp.Name AS Paper
+		 FROM
+			ScientificPapers sp
+		 JOIN 
+			PapersAuthors pa ON pa.PaperId = sp.PaperId
+		 JOIN
+			Scientists s ON s.ScientistId = pa.AuthorId
+		 WHERE 
+			s.CountryId = c.CountryId
+		 ORDER BY
+			sp.PublicationDate
+		 LIMIT 1
+		), 'NEMA IH')
+	AS First_Published_Paper
+FROM Countries c
 
 ---Query 7 - Order Cities by the number of Scientists currently staying there---
 
@@ -96,17 +121,17 @@ ORDER BY
 ---Query 8 - Average number of citations per Accelerator---
 
 SELECT a.Name AS Accelerator, 
-	COALESCE
-	((SELECT 
-	 	 ROUND(AVG(sp.CitationsNumber),2)
-	  FROM 
-	 	 ScientificPapers sp
-	  JOIN
-	 	 Projects p ON p.ProjectId = sp.ProjectId
-	  JOIN
-	 	 ProjectsAccelerators pa ON pa.ProjectId = p.ProjectId
-	  WHERE 
-	 	 sp.ProjectId = pa.ProjectId AND a.AcceleratorId = pa.AcceleratorId), 0)
+	COALESCE(
+	   (SELECT 
+	 	 	ROUND(AVG(sp.CitationsNumber),2)
+	  	FROM 
+	 	 	ScientificPapers sp
+	  	JOIN
+	 	 	Projects p ON p.ProjectId = sp.ProjectId
+	  	JOIN
+	 	 	ProjectsAccelerators pa ON pa.ProjectId = p.ProjectId
+	  	WHERE 
+	 	 	sp.ProjectId = pa.ProjectId AND a.AcceleratorId = pa.AcceleratorId), 0)
 	 AS Average_Citations_Number 
 FROM 
 	Accelerators a
