@@ -187,6 +187,26 @@ HAVING
 ORDER BY
 	Decade
 
+---Bonus Query - Top 10 richest scientists---
+
+SELECT 
+	s.Surname,
+	(SELECT 
+	 	ROUND(CAST(
+			  	SUM(SQRT(sp.CitationsNumber)/(SELECT COUNT(*) FROM PapersAuthors pa WHERE pa.PaperId = sp.PaperId))
+			  AS NUMERIC), 2)
+	FROM
+		ScientificPapers sp
+	JOIN 
+		PapersAuthors pa ON sp.PaperId = pa.PaperId
+	WHERE
+		s.ScientistId = pa.AuthorId)
+	AS Paycheck
+FROM
+	Scientists s
+ORDER BY
+	Paycheck DESC
+LIMIT 10
 
 
 
