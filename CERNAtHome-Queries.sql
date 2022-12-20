@@ -177,7 +177,7 @@ SELECT
 	 	WHEN s.Gender = 9 THEN 'Ostalo'
 	END
 	AS Gender, 
-	COUNT(*) AS Number_Per_Category
+	COUNT(*) AS Scientists_Per_Category
 FROM 
 	Scientists s
 GROUP BY
@@ -191,7 +191,7 @@ ORDER BY
 
 SELECT 
 	s.Surname,
-	(SELECT 
+	COALESCE((SELECT 
 	 	ROUND(CAST(
 			  	SUM(SQRT(sp.CitationsNumber)/(SELECT COUNT(*) FROM PapersAuthors pa WHERE pa.PaperId = sp.PaperId))
 			  AS NUMERIC), 2)
@@ -200,20 +200,13 @@ SELECT
 	JOIN 
 		PapersAuthors pa ON sp.PaperId = pa.PaperId
 	WHERE
-		s.ScientistId = pa.AuthorId)
+		s.ScientistId = pa.AuthorId),0)
 	AS Paycheck
 FROM
 	Scientists s
 ORDER BY
 	Paycheck DESC
 LIMIT 10
-
-
-
-
-
-
-
 
 
 
