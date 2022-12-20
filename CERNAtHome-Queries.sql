@@ -77,6 +77,32 @@ WHERE
 	
 ---Query 5 - Number od papers per country and most popular paper by a scientist from the same country---
 
+SELECT 
+	c.Name AS Country, COUNT(*) AS Number_Of_Papers, 
+	(SELECT
+		sp.Name
+	FROM 
+		ScientificPapers sp
+	JOIN 
+	 	PapersAuthors pa ON pa.PaperId = sp.PaperId
+	JOIN 
+		Scientists s ON s.ScientistId = pa.AuthorId
+	WHERE 
+		s.CountryId = c.CountryId
+	ORDER BY
+		sp.CitationsNumber DESC
+	LIMIT 1)
+	AS Most_Popular_Paper
+FROM 
+	ScientificPapers sp
+JOIN 
+	 PapersAuthors pa ON pa.PaperId = sp.PaperId
+JOIN 
+	Scientists s ON s.ScientistId = pa.AuthorId 
+JOIN 
+	Countries c ON c.CountryId = s.CountryId
+GROUP BY
+	c.CountryId
 
 ---Query 6 - First published paper per country---
 
@@ -96,7 +122,7 @@ SELECT
 		 ORDER BY
 			sp.PublicationDate
 		 LIMIT 1
-		), 'NEMA IH')
+		), 'NEMA GA')
 	AS First_Published_Paper
 FROM Countries c
 
