@@ -165,9 +165,27 @@ SELECT a.Name AS Accelerator,
 FROM 
 	Accelerators a
 	
----Query 9 - 
+---Query 9 - Number of Scientists per Profession, decade of birth and Gender, ordered by decade---
 
-
+SELECT 
+	SUBSTRING(CAST(DATE_PART('year', s.BirthDate) AS VARCHAR), 1, 3) AS Decade, 
+	s.Profession, 
+	CASE
+		WHEN s.Gender = 0 THEN 'Nepoznato'
+	 	WHEN s.Gender = 1 THEN 'Muški'
+	 	WHEN s.Gender = 2 THEN 'Ženski'
+	 	WHEN s.Gender = 9 THEN 'Ostalo'
+	END
+	AS Gender, 
+	COUNT(*) AS Number_Per_Category
+FROM 
+	Scientists s
+GROUP BY
+	s.Profession, Decade, s.Gender
+HAVING 
+	COUNT(*) >= 20
+ORDER BY
+	Decade
 
 
 
