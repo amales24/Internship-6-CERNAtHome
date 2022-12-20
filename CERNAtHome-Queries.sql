@@ -64,9 +64,16 @@ LEFT JOIN
 LEFT JOIN 
 	Accelerators a ON pa.AcceleratorId = a.AcceleratorId
 
+---Query 4 - Projects with at least one paper between 2015 and 2017---
 
-
-
+SELECT 
+	DISTINCT p.Name
+FROM
+	Projects p
+JOIN 
+	ScientificPapers sp ON sp.ProjectId = p.ProjectId
+WHERE  
+	DATE_PART('year', sp.PublicationDate) BETWEEN 2015 AND 2017
 
 
 
