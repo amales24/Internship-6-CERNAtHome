@@ -66,7 +66,29 @@ CREATE TABLE PapersAuthors(
 );
 
 
-
+CREATE TRIGGER  Check_Hotel_Capacity AFTER INSERT ON Scientists 
+FOR EACH ROW
+	EXECUTE PROCEDURE CheckCapacity();
+	
+CREATE OR REPLACE FUNCTION CheckCapacity() RETURNS TRIGGER 
+LANGUAGE plpgsql
+AS $$
+	DECLARE insertedHotelId INT;
+	DECLARE Visitors INT;
+	DECLARE HotelCapacity INT;
+BEGIN
+	SELECT NEW.hotelid INTO insertedHotelId;
+	SELECT COUNT(*) FROM Scientists s WHERE s.HotelId = insertedHotelId INTO Visitors;
+	SELECT h.Capacity FROM Hotels h WHERE h.HotelId = insertedHotelId INTO HotelCapacity;
+	
+	IF (Visitors > HotelCapacity)
+	THEN
+		RAISE EXCEPTION 'There is not enough rooms in hotels!';
+	END IF;
+	RETURN NEW;
+END;
+$$
+ 
 
 
 
