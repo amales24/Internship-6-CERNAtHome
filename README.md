@@ -1,6 +1,6 @@
 # Internship-6-CERNAtHome
 
-TASK: 
+TASK:  
 Create a database for CERN following instructions below. <br />
 Each accelerator is tied to one or more projects and each project can be tied to one or more accelerators (or none). <br />
 For each project there ara multiple scientific papers, but each paper has to be written on exactly one project. We track the number of citations for each paper. <br />
